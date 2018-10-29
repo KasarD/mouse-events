@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# NPM libs
+node_modules/
+
+# JetBrains IDE
+.idea/
