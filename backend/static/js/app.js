@@ -7,40 +7,39 @@ import LoginScreen from './components/login_screen';
 import GameRules from './components/game_rules';
 import Timer from './components/timer';
 
-const MAX_BULK_SIZE = 10;
+const MAX_BULK_SIZE = 100;
 
 
 class GameContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            searchValue: null, // Value, that user are looking for
-            randomArray: [],   // Random values to fill the buttons
-            counter: 0,        // Total user score counter
+            searchValue: null, // Значение, которое ищет пользователь в данный момент
+            randomArray: [],   // Рандомные значения для заполнения кнопок
+            counter: 0,        // Общее количество правильных ответов
 
-            isLogon: false,    // If user type his nickname?
-            nickname: '',      // Handle nickname of current user
+            isLogon: false,    // Пользователь залогинился?
+            nickname: '',      // Содержит никнейм текущего пользователя
 
-            gameStarted: false, // Is game started?
-            gamePlayed: false,  // Is timer count end?
+            gameStarted: false, // Игра началась?
+            gamePlayed: false,  // Игра сыграна?
 
-            deltaX: [],         // Store bulk of x mouse coordinates
-            deltaY: [],         // Store bulk of y mouse coordinates
-            eventCounter: 0,    // counter for limit bulk size (default - 100)
+            deltaX: [],         // Временный масив для координат мыши по X
+            deltaY: [],         // Аналогично по Y
+            eventCounter: 0,    // Счетчик значений во временном ханилище
         }
     }
 
     /*
-     * For the first time, when component did mount, we need to generate array with random values
+     * При первичном рендеринге компонента мы генерируем рандомный массив чисел
      */
     componentDidMount = () => {
         this._makeRandomArray(1, 20, 9);
     };
 
     /*
-     * We move that logic out to use this function in
-     * success Number action callback. So if user get the right number
-     * then component should refresh his values
+     * Логика обновления вынесена в данный метод, чтоб его можно было использовать в качестве callback'a при
+	 * выборе правильного ответа пользователем
      */
     refreshValues = () => {
         const counter = this.state.counter;
@@ -49,10 +48,6 @@ class GameContainer extends Component {
         }, this._makeRandomArray(1, 20, 9));
     };
 
-    /*
-     * Callback for LoginScreen.
-     * Put user nickname to the state (we use it in after game statistic and game rules)
-     */
     setLoginName = (name) => {
         this.setState({
             nickname: name,
@@ -60,26 +55,20 @@ class GameContainer extends Component {
         })
     };
 
-    /*
-     * Register mouse movement on game container area
-     */
     _onMouseMove = (e) => {
-        console.log("X: ", e.screenX, " Y: ", e.screenY);
+        // console.log("X: ", e.screenX, " Y: ", e.screenY);
         let {deltaX, deltaY, eventCounter} = this.state;
 
-        // Get x and y coordinates from event and push it to current bulk
+        // Получаем координаты x и y для текущего положения курсора через событие
         deltaX.push(e.screenX);
         deltaY.push(e.screenY);
 
-        // Assumed that deltaX length is equal to deltaY length, so we can check
-        // max size only by one array length
+        // Подразумевается, что размерность deltaX равна размерности deltaY
         if (deltaX.length === MAX_BULK_SIZE) {
-            // We should use COPY of original bulk, because in Axios promise we could
-            // get incorrect state! So we use trick with slice() to get a full copy.
-            // Since MAX_BULK_SIZE is not very big, that arrays have no effect on performance
+            // Мы должны сделать копию оригинальных массивов, чтобы передать их в процедуру отправки на сервер,
+            // т.к. иначе данная процедура может взять некорректные значения из текущего состояния компонента (обновление состояния происходит асинхронно)
             this._postEventsBulk(deltaX.slice(), deltaY.slice());
 
-            // Now clear up arrays to handle another party
             deltaX.splice(0, deltaX.length);
             deltaY.splice(0, deltaY.length);
             eventCounter = -1
@@ -158,6 +147,9 @@ class GameContainer extends Component {
                     searchValue={this.state.searchValue}
                     onRefresh={this.refreshValues}
                 />
+                <div>
+                    Ваш счет: {this.state.counter}
+                </div>
                 <Timer timerStop={this.onGameStop}/>
             </div>
         )

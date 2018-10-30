@@ -1,0 +1,12 @@
+.container {
+  margin-top: 50px;
+  margin-bottom: 50px; }
+  .container .field .row {
+    margin-bottom: 50px;
+    margin-top: 50px; }
+    .container .field .row .btn {
+      width: 100px;
+      height: 50px; }
+
+
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vLi9zdGF0aWMvY3NzL3N0YXRpYy9jc3MvbWFpbi5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0UsaUJBQWdCO0VBQ2hCLG9CQUFtQixFQWNwQjtFQWhCRDtJQU1NLG9CQUFtQjtJQUNuQixpQkFBZ0IsRUFNakI7SUFiTDtNQVVRLGFBQVk7TUFDWixhQUFZLEVBQ2IiLCJmaWxlIjoiYXBwX3N0eWxlcy5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIuY29udGFpbmVyIHtcbiAgbWFyZ2luLXRvcDogNTBweDtcbiAgbWFyZ2luLWJvdHRvbTogNTBweDtcblxuICAuZmllbGQge1xuICAgIC5yb3cge1xuICAgICAgbWFyZ2luLWJvdHRvbTogNTBweDtcbiAgICAgIG1hcmdpbi10b3A6IDUwcHg7XG5cbiAgICAgIC5idG4ge1xuICAgICAgICB3aWR0aDogMTAwcHg7XG4gICAgICAgIGhlaWdodDogNTBweDtcbiAgICAgIH1cbiAgICB9XG4gIH1cblxufSJdLCJzb3VyY2VSb290IjoiIn0=*/

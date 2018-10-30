@@ -22,8 +22,10 @@ class LoginScreen extends Component {
     render() {
         return (
             <div className={'jumbotron'}>
-                <h2>Please, input your nickname</h2>
+                <h2>Пожалуйста, введите свое имя</h2>
+                <br/>
                 <input value={this.state.nickname} onChange={this.onChange} />
+                <br/>
                 <button onClick={this.onLogin} className={'btn btn-primary'}>Login</button>
             </div>
         )

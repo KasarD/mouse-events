@@ -5,9 +5,10 @@ class GameRules extends Component {
     renderRules = () => {
         return (
             <div className={'alert alert-info'} role={'alert'}>
-                Привет, {this.props.nickname}! В этой игре тебе необходимо найти как можно больше чисел за две минуты.
+                Привет, <b>{this.props.nickname}</b>! <br/>
+                В этой игре тебе необходимо найти как можно больше чисел за две минуты. <br/>
                 Для начала нажми на кнопку Старт.
-
+                <br/><br/>
                 <button onClick={this.props.onGameStart} className={'btn btn-success'}>Старт</button>
             </div>
         )
@@ -17,10 +18,11 @@ class GameRules extends Component {
         const {nickname, totalScore} = this.props;
         return (
             <div className={'alert alert-success'} role={'alert'}>
-                Your nickname: {nickname}, total score: {totalScore}
-                Thanks for playing!
-
-                <button onClick={this.props.onGameSave} className={'btn btn-success'}>Save results!</button>
+                <b>Твое имя:</b> {nickname}, <br/>
+                <b>Количество очков:</b> {totalScore} <br/>
+                Спасибо за игру!
+                <br/><br/>
+                <button onClick={this.props.onGameSave} className={'btn btn-success'}>Сохранить результат!</button>
             </div>
         )
     };

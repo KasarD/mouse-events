@@ -18,7 +18,7 @@ class Number extends Component {
     success = () => {
         this.setState({
             btnStyle: 'btn-success'
-        }, this.props.onNotify())
+        }, this.props.onNotify());
         setTimeout(this.resetState, 1000)
     };
 

@@ -1,11 +1,15 @@
+"""
+Модуль содержит полезные утилиты, которые могут быть переиспользованы в коде
+"""
+
 import datetime
 
 
 def save_dataframe(dataframe, filename):
     """
-    Save Pandas DataFrame to the filesystem
+    Сохраняет датафрейм Pandas в файловую систему, предварительно сжав его zip архиватором
     :param dataframe: pandas DataFrame
-    :param filename: postfix to current file
+    :param filename: постфикс для имени файла результата
     :return: None
     """
     timestamp = datetime.datetime.now()

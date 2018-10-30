@@ -1,3 +1,8 @@
+"""
+Модуль содержит описание простого HTTP сервера на python.
+Поддерживаются как GET, так и POST запросы
+"""
+
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import datetime
 import json
@@ -7,6 +12,7 @@ import numpy as np
 from backend.urls import html_paths, static_paths
 from backend.utils import save_dataframe
 
+# Инициализируем пустой Дата фрейм для хранения данных в оперативной памяти
 GLOBAL_CACHE = pd.DataFrame(data={'x': [], 'y': []}, dtype=np.int32)
 
 
@@ -25,9 +31,8 @@ class SimpleHandler(BaseHTTPRequestHandler):
 
     def _perform_request(self, path):
         """
-        Get a request path and read file from filesystem, then put it
-        to client data upstream
-        :param path: relative path to file in filesystem
+        Получаем относительный путь до файла и отдаем его клинтской стороне
+        :param path: относительный пусть к файлу
         :return: None
         """
         self._set_headers()
@@ -37,8 +42,8 @@ class SimpleHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         """
-        Our server handle GET requests to give client a html pages or assets
-        :return: None (but really return byte array of html/asset data
+        Наш простейший сервер обрабатывает GET запросы только на отдачу статических файлов (html/js/css)
+        Поэтому данный метод проверяет, существует ли запрашиваемый путь и выдает исходный файл
         """
         current_path = self.path
         if current_path in static_paths:
@@ -50,9 +55,9 @@ class SimpleHandler(BaseHTTPRequestHandler):
 
     def _handle_data(self):
         """
-        Handle data from client request and parse it with json module.
-        Our server use REST API to communicate with client
-        :return: dict() object
+        Метод обрабатывает принятые данные в байт коде, содержащие данные в формате JSON.
+        Метод преобразует в python dict() и возвращает словарь
+        :return: dict
         """
         content_length = int(self.headers['Content-Length'])
         post_data = self.rfile.read(content_length)
@@ -61,21 +66,19 @@ class SimpleHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         """
-        Handle POST requests from client.
-        Currently supported only two paths:
-            /events - to get a mouse coordinates array
-            /fin    - to get a user statistic (also use as signal to save current DataFrame)
-        :return:
+        Метод обрабатывает POST запросы от клиента.
+        На данный момент доступны два адреса:
+            /events - для обработки позиции курсора мыши
+            /fin    - для обработки статистики игры пользователя
+        :return: None
         """
         payload = self._handle_data()
         code = 200
         global GLOBAL_CACHE
         if self.path == '/events':
-            # Make a small dataframe to handle data from client and append it to global frame
             df = pd.DataFrame(payload, dtype=np.int32)
             GLOBAL_CACHE = GLOBAL_CACHE.append(df, ignore_index=True)
         elif self.path == '/fin':
-            # Payload also contains total score, but we don't need it
             nickname = payload['nickname']
             save_dataframe(GLOBAL_CACHE, nickname)
         else:
