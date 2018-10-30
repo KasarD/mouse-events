@@ -21,7 +21,7 @@ class Timer extends Component {
 
     componentDidMount = () => {
         this.setState({
-            timer: setTimeout(this.props.timerStop, 60000),
+            timer: setTimeout(this.props.timerStop, 7000),
             start: new Date(),
             countdown: setInterval(this.tic, 50)
         })

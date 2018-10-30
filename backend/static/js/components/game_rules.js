@@ -19,6 +19,8 @@ class GameRules extends Component {
             <div className={'alert alert-success'} role={'alert'}>
                 Your nickname: {nickname}, total score: {totalScore}
                 Thanks for playing!
+
+                <button onClick={this.props.onGameSave} className={'btn btn-success'}>Save results!</button>
             </div>
         )
     };

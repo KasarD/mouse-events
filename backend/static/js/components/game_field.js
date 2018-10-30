@@ -10,7 +10,7 @@ class GameField extends Component {
             return "";
         } else {
             return (
-                <div className={'container'}>
+                <div className={'container field'}>
                     <div className={'row'}>
                         <div className={'col-4'}>
                             <Number value={items[0]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
