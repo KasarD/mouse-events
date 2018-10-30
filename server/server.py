@@ -26,7 +26,8 @@ class SimpleHandler(BaseHTTPRequestHandler):
     def _get_statics():
         return {
             '/static/dist/app.js': './static/dist/app.js',
-            '/static/dist/vendors.js': './static/dist/vendors.js'
+            '/static/dist/vendors.js': './static/dist/vendors.js',
+            '/static/dist/app_styles.css': './static/dist/app_styles.css'
         }
 
     def do_HEAD(self):

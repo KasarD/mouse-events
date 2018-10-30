@@ -6,12 +6,13 @@ var path = require('path'),
     OptimizeCssAssetsPlugin = require("optimize-css-assets-webpack-plugin")
 
 
-var webroot = "./static/dist",
-    styles = "./static/css",
+var webroot = "./static/dist/",
+    styles = "./static/css/",
     scripts = "./static/js/";
 
 var paths = {
     app: scripts + "app.js",
+    css: styles + "main_css.js",
     bundle: webroot
 };
 
@@ -20,7 +21,8 @@ module.exports = (env) => {
 
     var cfg = {
         entry: {
-            app: paths.app
+            app: paths.app,
+            app_styles: paths.css
         },
         output: {
             filename: '[name].js',
