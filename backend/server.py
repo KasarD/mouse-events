@@ -10,7 +10,7 @@ import pandas as pd
 import numpy as np
 
 from backend.urls import html_paths, static_paths
-from backend.utils import save_dataframe
+from backend.utils import save_dataframe, update_dataframe
 
 # Инициализируем пустой Дата фрейм для хранения данных в оперативной памяти
 GLOBAL_CACHE = pd.DataFrame(data={'x': [], 'y': []}, dtype=np.int32)
@@ -45,13 +45,28 @@ class SimpleHandler(BaseHTTPRequestHandler):
         Наш простейший сервер обрабатывает GET запросы только на отдачу статических файлов (html/js/css)
         Поэтому данный метод проверяет, существует ли запрашиваемый путь и выдает исходный файл
         """
-        current_path = self.path
-        if current_path in static_paths:
-            self._perform_request(static_paths[current_path])
-        elif current_path in html_paths:
-            self._perform_request(html_paths[current_path])
+        file_path = self._get_path()
+        if file_path is not None:
+            self._perform_request(file_path)
         else:
-            self._set_headers(code=400)
+            self._set_headers(code=404)
+
+    def do_POST(self):
+        """
+        Метод обрабатывает POST запросы от клиента.
+        На данный момент доступны два адреса:
+            /events - для обработки позиции курсора мыши
+            /fin    - для обработки статистики игры пользователя
+        :return: None
+        """
+        payload = self._handle_data()
+        global GLOBAL_CACHE
+        code, dataframe = self._handle_post(GLOBAL_CACHE, payload)
+
+        if code != 404:
+            GLOBAL_CACHE = dataframe
+
+        self._set_headers(code=code)
 
     def _handle_data(self):
         """
@@ -64,26 +79,43 @@ class SimpleHandler(BaseHTTPRequestHandler):
         pretty_data = post_data.decode('utf-8')
         return json.loads(pretty_data)
 
-    def do_POST(self):
+    def _get_path(self):
         """
-        Метод обрабатывает POST запросы от клиента.
-        На данный момент доступны два адреса:
-            /events - для обработки позиции курсора мыши
-            /fin    - для обработки статистики игры пользователя
-        :return: None
+        Возвращает относительный путь до файла, содержащего статические данные (html/js/css)
+        Если файл не найден возвращает None
+        :return: str / None
         """
-        payload = self._handle_data()
+        current_path = self.path
+        if current_path in static_paths:
+            file_path = static_paths[current_path]
+        elif current_path in html_paths:
+            file_path = html_paths[current_path]
+        else:
+            file_path = None
+
+        return file_path
+
+    def _handle_post(self, dataframe, payload):
+        """
+        Обрабатывает данные, полученные от клиента.
+        В первом случае метод обновляет существующий глобальный датафрейм, а во втором вызывает процедуру
+        сохранения датафрейма на диск
+        :param dataframe: датафрейм для обновления/сохранения
+        :param payload: словарь python с данными: {'x': [...], 'y': [...]}
+        :return: [код ответа, обновленный датафрейм]
+        """
         code = 200
-        global GLOBAL_CACHE
         if self.path == '/events':
-            df = pd.DataFrame(payload, dtype=np.int32)
-            GLOBAL_CACHE = GLOBAL_CACHE.append(df, ignore_index=True)
+            dataframe = update_dataframe(dataframe, payload)
         elif self.path == '/fin':
             nickname = payload['nickname']
-            save_dataframe(GLOBAL_CACHE, nickname)
+            save_dataframe(dataframe, nickname)
+            # Очищаем глобальный датафрейм после сохранения
+            dataframe = dataframe[0:0]
         else:
             code = 404
-        self._set_headers(code=code)
+
+        return [code, dataframe]
 
 
 if __name__ == '__main__':
