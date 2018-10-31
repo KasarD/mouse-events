@@ -3,47 +3,28 @@ import Number from './number';
 
 
 class GameField extends Component {
+    renderRow = (values) => {
+        return (
+            <div className={'row'}>
+                {values.map((val, index) => <Number key={index} value={val} searchValue={this.props.searchValue} onNotify={this.props.onRefresh} />) }
+            </div>
+        )
+    };
 
     render() {
-        const {items, searchValue} = this.props;
+        const {items} = this.props;
         if (items.length === 0) {
             return "";
         } else {
+            let rows = [
+                this.renderRow(items.slice(0, 3)),
+                this.renderRow(items.slice(3, 6)),
+                this.renderRow(items.slice(6, 9)),
+            ];
+
             return (
                 <div className={'container field'}>
-                    <div className={'row'}>
-                        <div className={'col-4'}>
-                            <Number value={items[0]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[1]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[2]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                    </div>
-                    <div className={'row'}>
-                        <div className={'col-4'}>
-                            <Number value={items[3]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[4]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[5]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                    </div>
-                    <div className={'row'}>
-                        <div className={'col-4'}>
-                            <Number value={items[6]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[7]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                        <div className={'col-4'}>
-                            <Number value={items[8]} searchValue={searchValue} onNotify={this.props.onRefresh}/>
-                        </div>
-                    </div>
+                    {rows}
                 </div>
             )
         }
